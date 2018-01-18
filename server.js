@@ -18,9 +18,9 @@ var db = require("./models");
 // set port
 var PORT = process.env.PORT || 3000;
 
-// var MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost/cheeriomongoscraper";
+var MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost/cheeriomongoscraper";
 
-// console.log("Using database " + MONGODB_URI);
+console.log("Using database " + MONGODB_URI);
 
 // initialize express
 var app = express();
@@ -36,7 +36,7 @@ app.use(express.static("public"));
 // set mongoose to leverage built in JavaScript ES6 Promises
 // connect to the mongo DB
 mongoose.Promise = Promise;
-mongoose.connect("mongodb://localhost/cheeriomongoscraper", {
+mongoose.connect(MONGODB_URI, {
 	useMongoClient: true
 });
 
