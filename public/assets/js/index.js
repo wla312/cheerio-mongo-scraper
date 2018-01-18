@@ -17,6 +17,9 @@ $("#get-articles").click(function(){
 
 			// grab the articles as json...
 			$.getJSON("/articles", function(data){
+
+				console.log("Inside getJSON");
+				console.log(data);
 				// for each one...
 				for (var i = 0; i < data.length; i++){
 					// display the information on the page

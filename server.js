@@ -88,6 +88,14 @@ app.get("/scrape", function(req, res){
 			// use the Article link to see if document exists...
 			// also tried Article title...
 			// this isn't really working as it should... there are still duplicates getting created
+
+			// db.Article.update({ link: result.link }, result, { new: true, upsert: true, setDefaultsOnInsert: true }, function(err, doc){
+			// 	// testing
+			// 	console.log(doc);
+
+			// });
+			// res.send("Scrape Complete");
+
 			db.Article
 			.find({title: result.title})
 			.limit(1)
