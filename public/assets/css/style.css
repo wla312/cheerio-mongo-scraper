@@ -1,4 +1,15 @@
-      body { 
+body {
+  /*background-image: url("../img/background.jpeg");*/
+  background-color: blue;
+}
+
+button {
+  margin-top: 10px;
+  margin-right: 10px;
+}
+
+
+/*      body { 
         background-color:black;
         background-image:
         radial-gradient(white, rgba(255,255,255,.2) 2px, transparent 40px),
@@ -58,3 +69,4 @@
         font-family: 'Oswald', sans-serif;
       }
 
+*/

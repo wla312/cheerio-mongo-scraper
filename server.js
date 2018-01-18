@@ -41,6 +41,19 @@ mongoose.connect("mongodb://localhost/cheeriomongoscraper", {
 });
 
 // ROUTES
+// remove any unsaved articles from the db...
+app.get("/clean", function(req, res){
+	db.Article
+		.remove({ saved: false })
+		.then(function(dbArticles){
+			// if any articles are found, send them to the client
+			res.send("Database updated.");
+		})
+		.catch(function(err){
+			// if an error occurs, send it back to the client
+			res.json(err);
+		});
+});
 
 // GET route for scraping fastcompany
 app.get("/scrape", function(req, res){
@@ -73,6 +86,8 @@ app.get("/scrape", function(req, res){
 			}
 
 			// use the Article link to see if document exists...
+			// also tried Article title...
+			// this isn't really working as it should... there are still duplicates getting created
 			db.Article
 			.find({title: result.title})
 			.limit(1)
@@ -111,6 +126,20 @@ app.get("/articles", function(req, res){
 		});
 });
 
+// GET route for saved articles
+app.get("/savedArticles", function(req, res){
+	db.Article
+		.find({ saved: true })
+		.then(function(dbArticles){
+			// if any articles are found, send them to the client
+			res.json(dbArticles);
+		})
+		.catch(function(err){
+			// if an error occurs, send it back to the client
+			res.json(err);
+		});
+});
+
 // GET route for grabbing a specific Article by id, populate it with its' note
 app.get("/articles/:id", function(req, res){
 	// using the id passed in the id parameter, prepare a query that finds the matching one in our db...
@@ -128,7 +157,7 @@ app.get("/articles/:id", function(req, res){
 		});
 });
 
-// route for saving/updating an Article's associated Note
+// POST route for saving/updating an Article's associated Note
 app.post("/articles/:id", function(req, res){
 	// create a new note and pass the req.body to the entry
 	db.Note
@@ -145,6 +174,21 @@ app.post("/articles/:id", function(req, res){
 			res.json(err);
 		});
 });
+
+// POST route for saving/unsaving an article
+app.post("/save", function(req, res){
+	db.Article
+		.findOneAndUpdate({ _id: req.body.id }, { saved: req.body.saved }, { new: true })
+		.then(function(dbArticle){
+			// send the article back to the client
+			res.json(dbArticle);
+		})
+		.catch(function(err){
+			// if an error occurs, send it back to the client
+			res.json(err);
+		});
+});
+
 
 
 // start the server
