@@ -43,20 +43,21 @@ mongoose.connect(MONGODB_URI, {
 // ROUTES
 // remove any unsaved articles from the db...
 app.get("/clean", function(req, res){
-	db.Article
-		.remove({ saved: false })
-		.then(function(dbArticles){
-			// if any articles are found, send them to the client
+	// db.Article
+	// 	.remove({ saved: false })
+	// 	.then(function(dbArticles){
+	// 		// if any articles are found, send them to the client
 			res.send("Database updated.");
-		})
-		.catch(function(err){
-			// if an error occurs, send it back to the client
-			res.json(err);
-		});
+	// 	})
+	// 	.catch(function(err){
+	// 		// if an error occurs, send it back to the client
+	// 		res.json(err);
+	// 	});
 });
 
 // GET route for scraping fastcompany
 app.get("/scrape", function(req, res){
+	console.log('WE HIT THE /Scrape ++++++++');
 	// first grab the body of the html with request
 	axios.get("https://fastcompany.com/").then(function(response){
 		// then, we load that into cheerio and save it to $ for a shorthand selector
@@ -94,28 +95,35 @@ app.get("/scrape", function(req, res){
 			// 	console.log(doc);
 
 			// });
-			// res.send("Scrape Complete");
+
+			
 
 			db.Article
 			.find({title: result.title})
 			.limit(1)
 			.then(function(check){
+
+				console.log('this is our check -----', check);
+				console.log('this is our result.title ----', result.title);
+
 				// if no document/result is found...
-				if(check.length == 0) {
-					// create a new Article using the `result` object built from scraping
-					db.Article
-					.create(result)
-					.then(function(dbArticle){
-						// if we were able to successfully scrape and save an Article, send a message to the client
-						res.send("Scrape Complete");
-					})
-					.catch(function(err){
-						// if an error occurred, send it to the client
-						res.json(err);
-					});
-				};
+				// if(check.length == 0) {
+				// 	// create a new Article using the `result` object built from scraping
+					// db.Article
+					// .create(result)
+					// .then(function(dbArticle){
+					// 	console.log('we just saved this guy ---', dbArticle);
+					// 	// if we were able to successfully scrape and save an Article, send a message to the client
+					// 	// res.send("Scrape Complete");
+					// })
+					// .catch(function(err){
+					// 	// if an error occurred, send it to the client
+					// 	res.json(err);
+					// });
+				// };
 			});
 		});
+		res.send("Scrape Complete");
 	});
 });
 
